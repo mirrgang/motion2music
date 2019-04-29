@@ -1,8 +1,7 @@
 function[BG] = getBackgroundSongData()
-    filedir = '/home/melanie/WORKSPACE/motion2music2017/BG_Song/';
+    filedir = '../BG_Song/';
     files = dir(fullfile(filedir, '*.csv'));
     nSamples = length(files);
-    close all;
     nParticipants = 23;
     mapping = get_sample_name_id_mapping();
     BG = zeros(nParticipants,nSamples,3);
