@@ -86,8 +86,8 @@ like = squeeze(BG_song(:,:,2));
 
 predictors_all = csvread('response_variables_PCs_2019.csv')
 all = csvread('feature_space_25_11_2018_PC_on_participant_level.csv')
-suitability_all = 
-[corr_suitability2move_music, p] = corr([suitability2move predictors_all])
+suitability_all = all(:, 31);
+[corr_suitability2move_music, p] = corr([suitability_all predictors_all])
 
 
 subplot(1,2,2)
