@@ -22,19 +22,6 @@ features = [];
 DT = delaunayTriangulation(x_pca);%triangulates data points
 [K,volume] = convexHull(DT);%computes volume of triangulated body spanned by the motion data points
 
-figure
-%compute euclidian distance
-s = 1./sqrt(sum(x_pca.^2,2))*100
-scatter3(x_pca(:,1),x_pca(:,2),x_pca(:,3),s,s);
-xlabel('PC1');
-ylabel('PC2');
-zlabel('PC3');
-xlim([-40 40])
-ylim([-40 40])
-zlim([-40 40])
-title(strcat('LeavingSong, volume: ', num2str(round(volume,0))))
-
-
 %for each of the three dimensions, either PCs or raw signals
 freq_hz = zeros(3,1);
 freq_mag = zeros(3,1);
@@ -88,19 +75,24 @@ for i=1:1:3
     figure;   
     subplot(4,1,1);
     hold on;
-    plot(time_sec,x_pca(:,1),'b');
-    plot(time_sec,x_pca(:,2),'r');
-    plot(time_sec,x_pca(:,3),'g');
+    plot(time_sec,x_pca(:,1),'k-');
+    t1 = plot(time_sec,x_pca(:,2),'.-');
+    t2 = plot(time_sec,x_pca(:,3),':');
+    set(t1, 'color', [0.6 0.6 0.6]);
+    set(t2, 'color', [0.2 0.2 0.2]);
     legend('PC1', 'PC2', 'PC3');
     ylabel('m/s^{2}');
     xlabel('time in s');
     ylim([-40 40]);
+    title('motion data in eigenspace');
     
     subplot(4,1,2);
     hold on;
-    plot(freqs,(X_mag1(1:N/2+1)),'b');
-    plot(freqs,(X_mag2(1:N/2+1)),'r');
-    plot(freqs,(X_mag3(1:N/2+1)),'g');
+    plot(freqs,(X_mag1(1:N/2+1)),'k-');
+    p1 = plot(freqs,(X_mag2(1:N/2+1)),'.-');
+    p2 = plot(freqs,(X_mag3(1:N/2+1)),':');
+    set(p1, 'color', [0.6 0.6 0.6]);
+    set(p2, 'color', [0.2 0.2 0.2]);
     %plot(freqs(1,locs(:,1)),peaks, 'xb');
     %plot(freqs(1,locs1), peaks1,'*b');
    	%plot(freqs(1,locs2), peaks2,'*r');
@@ -108,18 +100,21 @@ for i=1:1:3
     
     if max_freq_mag1==max_magnitude
         %max_point = [freqs(1,max_1), max_magnitude]; 
-        plot(freqs(1,max_1), max_magnitude,'*b');
+        plot(freqs(1,max_1), max_magnitude,'*k');
     elseif max_freq_mag2==max_magnitude
         %max_point = [freqs(1,max_2), max_magnitude]; 
-        plot(freqs(1,max_2), max_magnitude,'*r');
+        n1 = plot(freqs(1,max_2), max_magnitude,'*');
+        set(n1, 'color', [0.6 0.6 0.6]);
     else
         %max_point = [freqs(1,max_3), max_magnitude]; 
-        plot(freqs(1,max_3), max_magnitude,'*g');    
+        n2 = plot(freqs(1,max_3), max_magnitude,'*');    
+        set(n2, 'color', [0.2 0.2 0.2]);
     end
     legend('PC1', 'PC2', 'PC3', 'most dominant frequency');
     %legend('PC1', 'peaks PC1');
     xlabel('Frequency (Hz)');
     ylabel('|X|');
+    title('frequency magnitudes');
 %     
 %     
 %     
@@ -145,7 +140,7 @@ for i=1:1:3
     
     subplot(4,1,3);
     hold on;
-    plot(time_sec,x_pca(:,i), 'b');
+    plot(time_sec,x_pca(:,i), ':');
     for j=1:n_segments    
         if j~=n_segments
             peak_to_peak(j,1) = peak2peak(x_pca(beginning:beginning+interval-1,i));
@@ -162,7 +157,7 @@ for i=1:1:3
         end
         beginning = beginning + interval;
         plot([time_sec(min_s(j,1)) time_sec(max_s(j,1))], [min_s(j,2) max_s(j,2)],'k');
-        plot([time_sec(max_s(j,1)) time_sec(max_s(j,1))], [min_s(j,2) max_s(j,2)],'m');
+        plot([time_sec(max_s(j,1)) time_sec(max_s(j,1))], [min_s(j,2) max_s(j,2)],'.-');
     end
     
     
@@ -172,23 +167,23 @@ for i=1:1:3
     ylabel('m/s^{2}');
     xlabel('time in s');
     legend(strcat('PC1'), strcat('rise and fall PC1'),strcat('peak amplitude PC1'));
-   
+    title('rise and fall times, and peak amplitude');
     
     subplot(4,1,4);
     hold on;
     %plot(crossings1, ones(length(crossings1),1)*midlevel1,'*b');
     %plot(crossings2, ones(length(crossings2),1)*midlevel2,'*r');
-    plot(crossings+5, ones(length(crossings),1)*midlevel,'*r');
+    plot(crossings+5, ones(length(crossings),1)*midlevel,'*k');
 %     plot(crossings2, zeros(length(crossings2),1),'*r');
 %     plot(crossings3, zeros(length(crossings3),1),'*g');
-    plot(time_sec,x_pca(:,i), 'b');
+    plot(time_sec,x_pca(:,i), ':k');
    % plot(time_sec,x(:,2),'r');
    % plot(time_sec,x(:,3),'g');    
     ylim([-40 40]);
     ylabel(strcat('m/', 's^2'));
     xlabel('time in s');
     legend('midcrosses PC1','PC1');
-    
+    title('distance between midrosses (*)');
     
     %compute distance between midcrosses
     distance_midcrosses = abs(crossings(1:end-1)-crossings(2:end));

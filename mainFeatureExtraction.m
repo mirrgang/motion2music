@@ -1,4 +1,4 @@
-do_extract_features = 0;
+do_extract_features = 1;
 
 if(do_extract_features)
     savePreProcessedMotionData('/home/melanie/WORKSPACE/motion2music2017/motion_phone','motion_data_pre_processed/');

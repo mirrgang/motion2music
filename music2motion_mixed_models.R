@@ -58,10 +58,12 @@ pd <- position_dodge(-0.2)
 ggplot(all_df, aes(x=sample, y=emmean, colour=model)) + 
   geom_errorbar(aes(ymin=lower.CL, ymax=upper.CL), width=.1, position=pd) +
   geom_line(aes(linetype = model)) +
-  geom_point() +
-  scale_color_brewer(palette="Paired")+
-  theme_minimal() +
+  geom_point(aes(shape=model)) +
+  #scale_color_brewer(palette="Paired")+
+  scale_colour_grey(start = 0, end = 0.8) +
+  theme_bw() +
   scale_y_continuous(name="estimated marginal means")+
   scale_x_discrete(name="sample", labels=all_df$sample_name, limits=flevels) +
   rotate_x_text(angle = 45) 
 dev.off()
+
